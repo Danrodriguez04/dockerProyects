@@ -1,0 +1,36 @@
+
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: shopping-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: shopping
+      MYSQL_USER: shopping_user
+      MYSQL_PASSWORD: shopping123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: shopping-phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+  node:
+    image: node:26
+    tty: true
+    container_name: shoppingList
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../frontend:/app
+
+volumes:
+  mysql_data:
